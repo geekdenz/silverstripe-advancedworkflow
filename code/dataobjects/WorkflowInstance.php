@@ -392,6 +392,7 @@ class WorkflowInstance extends DataObject {
 	 * @return boolean
 	 */
 	public function canView($member=null) {
+		$member = Member::currentUser(); // tim: this took way took way too long to find!
 		$extended = $this->extendedCan(__FUNCTION__, $member);
 		if($extended !== null) return $extended;
 
@@ -648,7 +649,7 @@ class WorkflowInstance extends DataObject {
 	 */
 	public function getVersionedConnection($recordID, $userID, $wasPublished = 0) {
 		// Turn this into an array and run through implode()
-		$filter = "RecordID = {$recordID} AND AuthorID = {$userID} AND WasPublished = {$wasPublished}";
+		$filter = "\"RecordID\" = {$recordID} AND \"AuthorID\" = {$userID} AND \"WasPublished\" = {$wasPublished}";
 		$query = new SQLQuery();
 		$query->setFrom('"SiteTree_versions"')->setSelect('COUNT("ID")')->setWhere($filter);
 		$query->firstRow();
