@@ -67,14 +67,13 @@ class WorkflowInstance extends DataObject
     {
         $fields = new FieldList();
 
+        $fields->push(new HiddenField('DirectUpdate', '', 1));
         if (Permission::check('REASSIGN_ACTIVE_WORKFLOWS') &&
             // tim: Disallow editors to see header
             !Member::currentUser()->inGroup(Group::get()->filter('Title', 'Editor')->first())
         ) {
             if ($this->WorkflowStatus == 'Paused' || $this->WorkflowStatus == 'Active') {
                 $cmsUsers = Member::mapInCMSGroups();
-
-                $fields->push(new HiddenField('DirectUpdate', '', 1));
 
                 $fields->push(new HeaderField('InstanceReassignHeader', _t('WorkflowInstance.REASSIGN_HEADER', 'Reassign workflow')));
                 $fields->push(new CheckboxSetField('Users', _t('WorkflowDefinition.USERS', 'Users'), $cmsUsers));
